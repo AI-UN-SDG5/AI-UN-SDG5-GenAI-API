@@ -1,0 +1,9 @@
+google
+google-api-python-client
+google-cloud
+google-generativeai
+jupyter
+numpy
+pandas
+python-dotenv
+uvicorn
