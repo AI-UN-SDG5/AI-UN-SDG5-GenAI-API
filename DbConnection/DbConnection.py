@@ -30,7 +30,7 @@ class DbConnection:
     def __init__(self):
         self.DB_URL = f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{
             os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
-    
+        
     def insert_medical_appointment_note(self, medical_appointment_note: MedicalAppointmentNote):
         try:
             connection = psycopg2.connect(
@@ -44,6 +44,29 @@ class DbConnection:
             
             query = "INSERT INTO medical_appointment_note (id, user_account, title, content, insights, created_at, generated_insights_at, updated_at, generated_insights_updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             data = (medical_appointment_note.id, medical_appointment_note.user_account, medical_appointment_note.title, medical_appointment_note.content, medical_appointment_note.insights,medical_appointment_note.created_at, medical_appointment_note.generated_insights_at, medical_appointment_note.updated_at, medical_appointment_note.generated_insights_updated_at)
+            result = cursor.execute(query, data)
+            cursor.close()
+            return {
+                "id": medical_appointment_note.id
+            }
+
+        except Exception as e:
+            print(f"Error inserting medical appointment note insights: {e}")
+            return e
+        
+    def insert_medical_appointment_note_insights(self, medical_appointment_note: MedicalAppointmentNote):
+        try:
+            connection = psycopg2.connect(
+                host=os.environ.get('DB_HOST'),
+                database=os.environ.get('DB_NAME'),
+                user=os.environ.get('DB_USER'),
+                password=os.environ.get('DB_PASSWORD'),
+            )
+            connection.set_session(autocommit=True)
+            cursor = connection.cursor()
+            
+            query = "UPDATE medical_appointment_note SET insights = %s, generated_insights_at = %s WHERE id = %s"
+            data = (medical_appointment_note.insights, medical_appointment_note.generated_insights_at, medical_appointment_note.id)
             result = cursor.execute(query, data)
             cursor.close()
             return {
@@ -106,7 +129,7 @@ if __name__ == "__main__":
     placeholder_user_account_id = "51288e48-2fee-4881-be9e-7d021df734db" # replace with a user_account id that already exists in database for testing the DbConnection class
     
     # Run script to see if a placeholder medical appointment note is correctly inserted into the database
-    medical_appointment_note = MedicalAppointmentNote(
+    """medical_appointment_note = MedicalAppointmentNote(
         str(uuid.uuid4()),
         placeholder_user_account_id,
         "Medical Appointment Note Title",
@@ -118,10 +141,26 @@ if __name__ == "__main__":
         None
     )
     results = dbConnection.insert_medical_appointment_note(medical_appointment_note)
-    print("medical_appointment_note: ", results)
+    print("medical_appointment_note: ", results)"""
+
+    # Run script to see if a placeholder medical appointment note insights are correctly inserted
+    placeholder_medical_appointment_note_id = "92b13c3f-7b90-49e7-bca4-c0a2bf47119c"
+    medical_appointment_note_insights = MedicalAppointmentNote(
+        placeholder_medical_appointment_note_id,
+        placeholder_user_account_id,
+        "Medical Appointment Note Title",
+        "Feel sick",
+        "Generated insights placeholder",
+        datetime.datetime.now(),
+        datetime.datetime.now(),
+        None,
+        None
+    )
+    results = dbConnection.insert_medical_appointment_note_insights(medical_appointment_note_insights)
+    print("medical_appointment_note_insights: ", results)
     
     # Run script to see if a placeholder generated workout is correctly inserted into the database
-    generated_workout = GeneratedWorkout(
+    """generated_workout = GeneratedWorkout(
         str(uuid.uuid4()),
         placeholder_user_account_id,
         "I want toned thighs",
@@ -130,10 +169,10 @@ if __name__ == "__main__":
         datetime.datetime.now(),
     )
     results = dbConnection.insert_generated_workout(generated_workout)
-    print("generated_workout: ", results)
+    print("generated_workout: ", results)"""
 
     # Run class to see if a placeholder generated meal is correctly inserted into the database
-    generated_meal = GeneratedMeal(
+    """generated_meal = GeneratedMeal(
         str(uuid.uuid4()),
         placeholder_user_account_id,
         "Something sweet with strawberries",
@@ -143,4 +182,4 @@ if __name__ == "__main__":
         datetime.datetime.now(),
     )
     results = dbConnection.insert_generated_meal(generated_meal)
-    print("generated_meal: ", results)
+    print("generated_meal: ", results)"""
