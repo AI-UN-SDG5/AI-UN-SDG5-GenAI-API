@@ -175,6 +175,7 @@ if __name__ == "__main__":
     content_generator = ContentGenerator()
 
     db_connection: DbConnection = DbConnection()
+    
     # replace with a user_account id that already exists in database for testing the db_connection class
     placeholder_user_account_id = "51288e48-2fee-4881-be9e-7d021df734db"
 
