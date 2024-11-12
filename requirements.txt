@@ -10,6 +10,7 @@ pandas
 psycopg
 psycopg2-binary
 pydantic
+python-dateutil
 python-dotenv
 uuid
 uvicorn

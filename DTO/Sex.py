@@ -4,3 +4,6 @@ class Sex:
         self.code = code
         self.sex = sex
         self.icon_path = icon_path
+
+    def __str__(self):
+        return f"{{ \"id\": {self.id},  \"code\": {self.code}, \"sex\": {self.sex}, \"icon_path\": {self.icon_path}}}"

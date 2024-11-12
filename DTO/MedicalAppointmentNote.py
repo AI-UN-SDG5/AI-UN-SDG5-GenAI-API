@@ -9,3 +9,6 @@ class MedicalAppointmentNote:
         self.generated_insights_at = generated_insights_at
         self.updated_at = updated_at
         self.generated_insights_updated_at = generated_insights_updated_at
+
+    def __str__(self):
+        return f"{{\"id\":{self.id}, \"user_account\":{self.user_account}, \"title\":{self.title}, \"content\":{self.content}, \"insights\":{self.insights}, \"created_at\":{self.generated_insights_at}, \"updated_at\":{self.updated_at}, \"generated_insights_updated_at\":{self.generated_insights_at}}}"
