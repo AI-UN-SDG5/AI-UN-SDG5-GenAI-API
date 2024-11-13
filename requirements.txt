@@ -1,0 +1,17 @@
+django
+google
+google-api-python-client
+google-cloud
+google-generativeai
+google-oauth
+jupyter
+numpy
+pandas
+psycopg
+psycopg2-binary
+pydantic
+python-dateutil
+python-dotenv
+uuid
+uvicorn
+vertexai
