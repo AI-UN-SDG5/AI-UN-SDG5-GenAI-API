@@ -22,8 +22,10 @@ Before continuing with running this API, it is important to set up the accompany
 9. For this project, add a service account with "Owner" rights and create a json service account credentials file for this service account.
 10. Encode this variable as a base64 string and save for later.
 11. Create a Gemini API key for this GCP project and save for later.
-12. Create a .env file and add the respective variables which can be seen in the .env.example file:
+12. Create a GCP Cloud storage bucket to store generated images and save the name of this bucket for later.
+13. Create a .env file and add the respective variables which can be seen in the .env.example file:
     - GEMINI_API_KEY=
+    - GCP_IMAGE_BUCKET
     - GCP_SA_KEY_STRING=
     - GOOGLE_PROJECT_ID=
     - GOOGLE_PROJECT_NAME=
@@ -32,5 +34,5 @@ Before continuing with running this API, it is important to set up the accompany
     - DB_PASSWORD=
     - DB_PORT=
     - DB_NAME=
-13. Run the FastAPI app with the following command: ```uvicorn app.main:app --reload --host 0.0.0.0 --port 8000```
-14. The app should now be running 
+14. Run the FastAPI app with the following command: ```uvicorn app.main:app --reload --host 0.0.0.0 --port 8000```
+15. The app should now be running 

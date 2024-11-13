@@ -25,6 +25,7 @@ from DTO.Diet import Diet
 from DTO.BloodType import BloodType
 from DTO.UserAccount import UserAccount
 from DTO.MedicalAppointmentNote import MedicalAppointmentNote
+from GCP.GCP import GCP
 
 class ContentGenerator:
 
@@ -39,6 +40,7 @@ class ContentGenerator:
                       credentials=self.credentials, location="europe-west1")
         self.image_model = ImageGenerationModel.from_pretrained(
             "imagen-3.0-generate-001")
+        self.gcp = GCP()
 
     def generate_medical_appointment_note_insights(
             self,
@@ -141,12 +143,13 @@ class ContentGenerator:
                 safety_filter_level="block_some",
                 person_generation="allow_adult",
             )
-            image_id = uuid.uuid4()
-            output_path = f"/tmp/{image_id}.png"
+            output_path = f"/tmp/{generated_meal_preliminary.id}.png"
 
             images[0].save(location=output_path, include_generation_parameters=False)
-
             print(f"Generated meal image saved at: {output_path}")
+
+            upload_image_to_gcp = self.gcp.upload_local_file(os.environ.get("GCP_IMAGE_BUCKET"), output_path, f"{generated_meal_preliminary.user_account}/{generated_meal_preliminary.id}.png")
+            print(f"Generated meal image successfully uploaded to GCP Cloud Storage: {upload_image_to_gcp}")
 
             generated_meal= GeneratedMeal(
                 generated_meal_preliminary.id,
@@ -154,7 +157,7 @@ class ContentGenerator:
                 generated_meal_preliminary.prompt,
                 response_title,
                 response_content,
-                f"{generated_meal_preliminary.user_account}/tmp/{image_id}.png",
+                f"{generated_meal_preliminary.user_account}/{generated_meal_preliminary.id}.png",
                 datetime.datetime.now()
             )
 
@@ -217,7 +220,7 @@ if __name__ == "__main__":
     results = content_generator.generate_workout(user_account, sex, blood_type, skin_type, diet_preferences, generated_workout_preliminary)
     print(results)"""
 
-    generated_meal_preliminary = GeneratedMeal(str(uuid.uuid4()), user_account.id, "strawberry, banana, kiwi smoothie", "", None, None, datetime.datetime.now())
+    generated_meal_preliminary = GeneratedMeal(str(uuid.uuid4()), user_account.id, "blueberry pancakes", "", None, None, datetime.datetime.now())
 
     results = content_generator.generate_meal(user_account, sex, blood_type, skin_type, diet_preferences, generated_meal_preliminary)
     print(results)
